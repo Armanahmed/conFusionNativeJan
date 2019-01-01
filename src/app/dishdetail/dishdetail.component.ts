@@ -18,15 +18,15 @@ export class DishdetailComponent implements OnInit {
 	comment: Comment;
 	errMess: string;
 
-	constructor(private dishservice: DishService, private route: ActivatedRoute, private routerExtensions: RouterExtensions, @Inject('BaseURL') private BaseURL) {
+	constructor(private dishservice: DishService, private route: ActivatedRoute, private routerExtensions: RouterExtensions, @Inject('BaseURL') private baseURL) {
 
 	}
 
 	ngOnInit() {
-	
+
 		this.route.params
 			.pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-			.subscribe(dish => this.dish = dish, errmess => this.errMess = errmess);
+			.subscribe(dish => this.dish = dish, errmess => { this.dish = null; this.errMess = <any>errmess; });
 		
 	}
 
