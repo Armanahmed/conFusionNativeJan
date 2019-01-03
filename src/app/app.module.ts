@@ -6,10 +6,14 @@ import { NativeScriptHttpModule } from "nativescript-angular/http";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
 
 import { MenuComponent } from './menu/menu.component';
 import { DishdetailComponent } from './dishdetail/dishdetail.component';
+import { HomeComponent } from './home/home.component';
 import { DishService } from "./services/dish.service";
+import { PromotionService } from './services/promotion.service';
+import { LeaderService } from './services/leader.service';
 import { ProcessHTTPMsgService } from './services/process-httpmsg.service';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -28,15 +32,19 @@ import { baseURL } from './shared/baseurl';
         AppRoutingModule,
         NativeScriptHttpModule,
         NativeScriptHttpClientModule,
+        NativeScriptUISideDrawerModule,
         HttpClientModule
     ],
     declarations: [
         AppComponent,
         MenuComponent,
-        DishdetailComponent
+        DishdetailComponent,
+        HomeComponent
     ],
     providers: [
         DishService,
+        PromotionService,
+        LeaderService,
         ProcessHTTPMsgService,
         { provide: 'BaseURL', useValue: baseURL}
     ],
