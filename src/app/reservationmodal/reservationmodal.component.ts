@@ -14,8 +14,8 @@ export class ReservationModalComponent implements OnInit {
 	guests: number;
 	isDateTime: boolean = false;
 	@ViewChild("datePicker") datePickerElement: ElementRef;
-  @ViewChild("timePicker") timePickerElement: ElementRef;
-  @ViewChild("guestPicker") guestPickerElement: ElementRef;
+	@ViewChild("timePicker") timePickerElement: ElementRef;
+	@ViewChild("guestPicker") guestPickerElement: ElementRef;
 
 	constructor(private params: ModalDialogParams, private page: Page) {
 
