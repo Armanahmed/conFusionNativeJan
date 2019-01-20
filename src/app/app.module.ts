@@ -26,6 +26,7 @@ import { DishService } from './services/dish.service';
 import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
 import { ProcessHTTPMsgService } from './services/process-httpmsg.service';
+import { CouchbaseService } from './services/couchbase.service';
 import { FavoriteService } from './services/favorite.service';
 
 import { NativeScriptHttpClientModule } from 'nativescript-angular/http-client';
@@ -69,6 +70,7 @@ import { baseURL } from './shared/baseurl';
         LeaderService,
         FavoriteService,
         ProcessHTTPMsgService,
+        CouchbaseService,
         { provide: 'BaseURL', useValue: baseURL}
     ],
     schemas: [
