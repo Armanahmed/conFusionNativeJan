@@ -3,6 +3,8 @@ import { TextField } from 'ui/text-field';
 import { Switch } from 'ui/switch';
 import { Validators, FormBuilder, FormGroup} from '@angular/forms';
 import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
+import * as app from "application";
+import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
@@ -28,6 +30,11 @@ export class ReservationComponent implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  onDrawerButtonTap(): void {
+    const sideDrawer = <RadSideDrawer>app.getRootView();
+    sideDrawer.showDrawer();
   }
 
   onSmokingChecked(args) {
