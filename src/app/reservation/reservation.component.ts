@@ -6,9 +6,18 @@ import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/mod
 import * as app from "application";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 
+import { Page } from 'ui/page';
+import { View } from 'ui/core/view';
+import { Animation, AnimationDefinition } from 'ui/animation';
+import { SwipeGestureEventData, SwipeDirection } from 'ui/gestures';
+import * as enums from 'ui/enums';
+
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
+import { CouchbaseService } from '../services/couchbase.service';
 import { ReservationModalComponent } from "../reservationmodal/reservationmodal.component";
+import { Reservation } from "../shared/reservation";
+
 
 @Component({
 	selector: 'app-reservation',
@@ -19,13 +28,30 @@ import { ReservationModalComponent } from "../reservationmodal/reservationmodal.
 export class ReservationComponent implements OnInit {
 
   reservation: FormGroup;
+  formView: View;
+  feedbackView: View;
+  showFeedback: boolean = false;
+  newReservation: Reservation;
+  reservations: Array<Reservation>;
+  docId: string = "reservations";
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private modalService: ModalDialogService, private vcRef: ViewContainerRef, private formBuilder: FormBuilder) { 
+  constructor(private changeDetectorRef: ChangeDetectorRef, private modalService: ModalDialogService, private vcRef: ViewContainerRef, private formBuilder: FormBuilder, private page: Page, private couchbaseService: CouchbaseService) { 
+    
     this.reservation = this.formBuilder.group({
       guests: 3,
       smoking: false,
       dateTime: ['', Validators.required]
     });
+
+    this.reservations = [];
+
+    let doc = this.couchbaseService.getDocument(this.docId);
+    if (doc == null) {
+      this.couchbaseService.createDocument({"reservations": []}, this.docId);
+    } else {
+      this.reservations = doc.reservations;
+    }
+
   }
 
   ngOnInit() {
@@ -76,7 +102,42 @@ export class ReservationComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(JSON.stringify(this.reservation.value));
+
+    this.newReservation = this.reservation.value;
+    this.formView = this.page.getViewById<View>("formView");
+    this.feedbackView = this.page.getViewById<View>("feedbackView");
+
+    this.reservations.push(this.newReservation);
+    this.couchbaseService.updateDocument(this.docId, {"reservations": this.reservations});
+    console.log(JSON.stringify(this.reservations));
+
+    this.animateSwitch();
+
+  }
+
+  animateSwitch() {    
+      
+    this.formView.animate({
+      scale: { x: 1, y: 0 },
+      opacity: 0,
+      duration: 500,
+      curve: enums.AnimationCurve.easeIn
+    }).then(() => {
+        this.feedbackView.animate({
+          scale: {x: 0, y: 0},
+          opacity: 0,
+          duration: 0
+        }).then(() => {
+          this.showFeedback = true;
+          this.feedbackView.animate({
+            scale: {x: 1, y: 1},
+            opacity: 1,
+            duration: 500,
+            curve: enums.AnimationCurve.easeOut
+          });
+        });
+      });       
+
   }
 
 }
